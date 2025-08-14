@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" sizes="192x192">
+<meta name="theme-color" content="#0b1324">
+<title>The Good Samaritan Network</title>
+<meta name="description" content="Biblical-historical, reflective web app. Made by Justin — Depths to the Heights.">
+<link rel="canonical" href="https://USERNAME.github.io/REPO-NAME/">
+<meta property="og:title" content="The Good Samaritan Network">
+<meta property="og:description" content="Reflective, Bible-grounded learning experience. Install on phone/desktop.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://USERNAME.github.io/REPO-NAME/">
+<meta property="og:image" content="https://USERNAME.github.io/REPO-NAME/icon-512.png">
+<link rel="apple-touch-icon" href="icon-512.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Georgia', serif;
+  background: linear-gradient(135deg, #0b1324 0%, #1a2438 100%);
+  color: #e8e4d9;
+  min-height: 100vh;
+  padding: 20px;
+  line-height: 1.6;
+}
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  animation: fadeIn 0.5s ease-in;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+h1 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: #f4e8c1;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+.subtitle {
+  text-align: center;
+  font-style: italic;
+  margin-bottom: 30px;
+  opacity: 0.9;
+  font-size: 0.95rem;
+}
+.scenario-card {
+  background: rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 25px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+.scenario-title {
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+  color: #f4e8c1;
+}
+.scenario-text {
+  margin-bottom: 20px;
+  line-height: 1.7;
+}
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.choice-btn {
+  background: rgba(244,232,193,0.15);
+  border: 1px solid rgba(244,232,193,0.3);
+  color: #e8e4d9;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  text-align: left;
+}
+.choice-btn:hover {
+  background: rgba(244,232,193,0.25);
+  transform: translateX(5px);
+}
+.network-status {
+  background: rgba(0,0,0,0.3);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.kindness-meter {
+  width: 100%;
+  height: 30px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 15px;
+  overflow: hidden;
+  margin: 15px 0;
+}
+.kindness-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4a7c59 0%, #8fc065 100%);
+  transition: width 0.5s ease;
+  border-radius: 15px;
+}
+.impact-message {
+  font-style: italic;
+  margin-top: 15px;
+  padding: 15px;
+  background: rgba(143,192,101,0.1);
+  border-radius: 8px;
+  border-left: 3px solid #8fc065;
+}
+.scripture-ref {
+  text-align: center;
+  margin: 20px 0;
+  padding: 15px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 8px;
+  font-style: italic;
+}
+.about-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: #e8e4d9;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+.modal-content {
+  background: #1a2438;
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 500px;
+  margin: 50px auto;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+.close-modal {
+  float: right;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #e8e4d9;
+}
+.region-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin: 20px 0;
+}
+.stat-box {
+  background: rgba(255,255,255,0.05);
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+
+<button class="about-btn" onclick="openModal()">About + Help</button>
+
+<div class="container">
+  <h1>The Good Samaritan Network</h1>
+  <p class="subtitle">"Who is my neighbor?" - Luke 10:29</p>
+
+  <div class="network-status">
+    <h3>Global Kindness Network</h3>
+    <div class="kindness-meter">
+      <div class="kindness-fill" id="kindnessFill" style="width: 30%"></div>
+    </div>
+    <p>Connected Hearts: <span id="connectedHearts">142</span> across <span id="regions">7</span> regions</p>
+  </div>
+
+  <div id="scenarioContainer" class="scenario-card">
+    <h2 class="scenario-title" id="scenarioTitle">Loading...</h2>
+    <p class="scenario-text" id="scenarioText">...</p>
+    <div class="choices" id="choicesContainer"></div>
+  </div>
+
+  <div id="impactMessage" class="impact-message" style="display:none;"></div>
+
+  <div class="scripture-ref">
+    <strong>Luke 10:36-37</strong><br>
+    "Which of these three do you think was a neighbor to the man who fell into the hands of robbers?"<br>
+    "The one who had mercy on him," the expert replied.<br>
+    Jesus told him, "Go and do likewise."
+  </div>
+
+  <div class="region-stats">
+    <div class="stat-box">
+      <strong>Online</strong><br>
+      <span id="onlineImpact">23 helped</span>
+    </div>
+    <div class="stat-box">
+      <strong>Community</strong><br>
+      <span id="communityImpact">41 served</span>
+    </div>
+    <div class="stat-box">
+      <strong>Crisis</strong><br>
+      <span id="crisisImpact">12 rescued</span>
+    </div>
+    <div class="stat-box">
+      <strong>Global</strong><br>
+      <span id="globalImpact">66 connected</span>
+    </div>
+  </div>
+
+  <div role="note" style="margin:16px 0; font-size:0.95rem; opacity:0.95;">
+    <strong>Free to use.</strong>
+    If this encouraged you, feel free to
+    <a href="https://www.paypal.com/donate/?hosted_button_id=8GRE7B8C3TP2U" target="_blank" rel="noopener">buy me a coffee</a>.
+    <span>— Made by Justin — Depths to the Heights</span>
+  </div>
+  <footer style="text-align:center;opacity:.9;margin:24px 0">
+    <strong>Made by Justin — Depths to the Heights</strong> ·
+    <a href="mailto:depthstoheights@gmail.com">depthstoheights@gmail.com</a>
+  </footer>
+</div>
+
+<div id="aboutModal" class="modal">
+  <div class="modal-content">
+    <span class="close-modal" onclick="closeModal()">&times;</span>
+    <h2>About The Good Samaritan Network</h2>
+    <p style="margin: 15px 0;">
+      This interactive experience brings the parable of the Good Samaritan into modern contexts. 
+      Every choice you make affects a global network of kindness that spans cultures and situations.
+    </p>
+    <p style="margin: 15px 0;">
+      Through scenarios involving online interactions, community crises, and global challenges, 
+      discover what it means to be a neighbor in today's interconnected world.
+    </p>
+    <h3 style="margin-top: 20px;">Need Help?</h3>
+    <p style="margin: 15px 0;">
+      This app provides spiritual encouragement and education, not medical advice.
+    </p>
+    <p style="background: rgba(255,100,100,0.1); padding: 10px; border-radius: 6px; margin: 15px 0;">
+      <strong>If you're in crisis (U.S.):</strong><br>
+      Call or text <strong>988</strong> for the Suicide & Crisis Lifeline
+    </p>
+    <p style="margin: 15px 0;">
+      Remember: Every act of kindness, no matter how small, ripples through the network 
+      and touches lives you may never see.
+    </p>
+  </div>
+</div>
+
+<script>
+const scenarios = [
+  {
+    title: "The Cyberbullied Teenager",
+    text: "You notice a harsh pile-on happening in your social media feed. A young person posted something awkward, and hundreds are mocking them. The comments are getting increasingly cruel. You see they've gone silent after posting 'I can't take this anymore.'",
+    choices: [
+      { text: "Report the harassment and send them a private message of support", impact: "online", kindness: 15 },
+      { text: "Publicly defend them and call out the bullying", impact: "community", kindness: 12 },
+      { text: "Scroll past - it's not your problem", impact: "none", kindness: -5 },
+      { text: "Contact their school or a trusted adult if you can identify them", impact: "crisis", kindness: 20 }
+    ]
+  },
+  {
+    title: "The Stranded Family",
+    text: "At a gas station, you see a family with young children standing by a broken-down car. It's getting dark and cold. The father approaches you hesitantly, explaining they're refugees who just started working but won't get paid until next week. They need $40 for a tow truck.",
+    choices: [
+      { text: "Give them the money and offer to wait with them", impact: "community", kindness: 18 },
+      { text: "Call a tow truck on your phone and pay directly", impact: "crisis", kindness: 15 },
+      { text: "Give them directions to the nearest shelter", impact: "online", kindness: 5 },
+      { text: "Apologize and drive away", impact: "none", kindness: -3 }
+    ]
+  },
+  {
+    title: "The Overwhelmed Caregiver",
+    text: "Your neighbor, who cares for her elderly mother with dementia, looks exhausted. You've seen her struggling with groceries while supporting her mother. Today, she's sitting on her porch steps, head in hands, quietly crying.",
+    choices: [
+      { text: "Sit with her and listen, offer to help with groceries regularly", impact: "community", kindness: 16 },
+      { text: "Connect her with local respite care resources", impact: "global", kindness: 14 },
+      { text: "Organize a neighborhood support schedule", impact: "community", kindness: 20 },
+      { text: "Wave politely but keep walking", impact: "none", kindness: -2 }
+    ]
+  },
+  {
+    title: "The Anonymous Cry for Help",
+    text: "In an online forum, someone posts: 'I'm in an abusive situation but have nowhere to go. I'm scared and alone. I don't know what to do.' Their profile gives no location or identifying information.",
+    choices: [
+      { text: "Share verified resources for domestic violence help", impact: "crisis", kindness: 17 },
+      { text: "Offer emotional support and encourage them to reach local services", impact: "online", kindness: 13 },
+      { text: "Report to forum moderators for professional intervention", impact: "global", kindness: 11 },
+      { text: "Ignore it - you can't verify if it's real", impact: "none", kindness: -4 }
+    ]
+  },
+  {
+    title: "The Homeless Veteran",
+    text: "Every day, you pass the same homeless veteran near your workplace. Today, temperatures are dropping dangerously low. He's shivering violently, and his lips are turning blue.",
+    choices: [
+      { text: "Call emergency services and stay with him", impact: "crisis", kindness: 19 },
+      { text: "Bring him hot food and connect him with veteran services", impact: "community", kindness: 16 },
+      { text: "Buy him winter gear and a warm meal", impact: "global", kindness: 14 },
+      { text: "Walk past quickly - someone else will help", impact: "none", kindness: -6 }
+    ]
+  },
+  {
+    title: "The Struggling Small Business",
+    text: "Your favorite local family restaurant posts that they're about to close permanently due to pandemic losses. The elderly couple who runs it has poured their life savings into keeping it open. They need $5,000 by week's end.",
+    choices: [
+      { text: "Organize a community fundraiser on social media", impact: "community", kindness: 18 },
+      { text: "Share their story widely and start a GoFundMe", impact: "online", kindness: 15 },
+      { text: "Commit to eating there weekly and bringing friends", impact: "global", kindness: 12 },
+      { text: "Feel sad but do nothing - times are tough for everyone", impact: "none", kindness: -1 }
+    ]
+  },
+  {
+    title: "The International Student",
+    text: "An international student in your class hasn't been attending. You learn their family back home is in a war zone, and they haven't heard from them in weeks. They're alone, struggling with studies, and visibly depressed.",
+    choices: [
+      { text: "Invite them for meals and help them connect with counseling", impact: "community", kindness: 17 },
+      { text: "Help organize a support group for international students", impact: "global", kindness: 19 },
+      { text: "Share class notes and check in regularly", impact: "online", kindness: 10 },
+      { text: "Mind your own business - it's too heavy", impact: "none", kindness: -3 }
+    ]
+  },
+  {
+    title: "The Scam Victim",
+    text: "Your elderly neighbor excitedly tells you they're sending $10,000 to claim a lottery prize. You recognize it's a scam. They become defensive when you express concern, saying you're jealous of their good fortune.",
+    choices: [
+      { text: "Gently persist and involve their family or authorities", impact: "crisis", kindness: 20 },
+      { text: "Show them online resources about similar scams", impact: "online", kindness: 14 },
+      { text: "Offer to go with them to the bank to ask questions", impact: "community", kindness: 16 },
+      { text: "You warned them - it's their choice now", impact: "none", kindness: -5 }
+    ]
+  }
+];
+
+let currentScenario = 0;
+let kindnessLevel = 30;
+let stats = {
+  online: 23,
+  community: 41,
+  crisis: 12,
+  global: 66,
+  hearts: 142,
+  regions: 7
+};
+
+function loadScenario() {
+  const scenario = scenarios[currentScenario];
+  document.getElementById('scenarioTitle').textContent = scenario.title;
+  document.getElementById('scenarioText').textContent = scenario.text;
+  
+  const choicesContainer = document.getElementById('choicesContainer');
+  choicesContainer.innerHTML = '';
+  
+  scenario.choices.forEach((choice, index) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = choice.text;
+    btn.onclick = () => makeChoice(index);
+    choicesContainer.appendChild(btn);
+  });
+  
+  document.getElementById('impactMessage').style.display = 'none';
+}
+
+function makeChoice(choiceIndex) {
+  const scenario = scenarios[currentScenario];
+  const choice = scenario.choices[choiceIndex];
+  
+  kindnessLevel = Math.min(100, Math.max(0, kindnessLevel + choice.kindness));
+  document.getElementById('kindnessFill').style.width = kindnessLevel + '%';
+  
+  if (choice.impact !== 'none') {
+    stats[choice.impact] += Math.floor(Math.random() * 5) + 1;
+    stats.hearts += Math.floor(Math.random() * 10) + 5;
+    if (Math.random() > 0.7) stats.regions += 1;
+  }
+  
+  updateStats();
+  
+  const messages = {
+    online: "Your digital compassion creates ripples across the network. Someone, somewhere, feels less alone.",
+    community: "Your local action strengthens the bonds of community. Hearts connect across divides.",
+    crisis: "Your courage in crisis becomes a lifeline. You've been the hands and feet of love.",
+    global: "Your kindness transcends borders. The network grows stronger, touching lives across cultures.",
+    none: "A moment passes. The network dims slightly. Another opportunity will come."
+  };
+  
+  const impactDiv = document.getElementById('impactMessage');
+  impactDiv.textContent = messages[choice.impact] || messages.none;
+  impactDiv.style.display = 'block';
+  
+  setTimeout(() => {
+    currentScenario = (currentScenario + 1) % scenarios.length;
+    loadScenario();
+  }, 3500);
+}
+
+function updateStats() {
+  document.getElementById('connectedHearts').textContent = stats.hearts;
+  document.getElementById('regions').textContent = stats.regions;
+  document.getElementById('onlineImpact').textContent = stats.online + ' helped';
+  document.getElementById('communityImpact').textContent = stats.community + ' served';
+  document.getElementById('crisisImpact').textContent = stats.crisis + ' rescued';
+  document.getElementById('globalImpact').textContent = stats.global + ' connected';
+}
+
+function openModal() {
+  document.getElementById('aboutModal').style.display = 'block';
+}
+
+function closeModal() {
+  document.getElementById('aboutModal').style.display = 'none';
+}
+
+// Initialize
+loadScenario();
+
+// Simulate network growth
+setInterval(() => {
+  if (Math.random() > 0.5) {
+    stats.hearts += Math.floor(Math.random() * 3) + 1;
+    updateStats();
+  }
+}, 10000);
+</script>
+
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('./service-worker.js');}</script>
+</body>
+</html>
